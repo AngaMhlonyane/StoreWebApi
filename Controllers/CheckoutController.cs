@@ -129,7 +129,7 @@ namespace StoreWebApi.Controllers
                                    .Include(c => c.Items)
                                    .FirstOrDefault(c => c.UserId == user.Id && !c.IsCompleted);
             if (checkout == null)
-                return BadRequest("No active checkout found.");
+                return BadRequest("Access denied");
 
             var item = checkout.Items.SingleOrDefault(i => i.ProductId == updateRequest.ProductId);
             if (item == null)
@@ -167,7 +167,7 @@ namespace StoreWebApi.Controllers
                                    .Include(c => c.Items)
                                    .FirstOrDefault(c => c.UserId == user.Id && !c.IsCompleted);
             if (checkout == null)
-                return BadRequest("No active checkout found.");
+                return BadRequest("Access denied");
 
             var item = checkout.Items.SingleOrDefault(i => i.ProductId == productId);
             if (item == null)
