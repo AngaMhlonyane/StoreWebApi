@@ -17,7 +17,7 @@ namespace StoreWebApi.Controllers
         }
 
         // Start a new checkout
-        [HttpPost("start")]
+        [HttpPost("CheckOut")]
         public IActionResult StartCheckout([FromBody] List<ProductRequest> products, string apiKey)
         {
             var user = _context.Users.SingleOrDefault(u => u.ApiKey == apiKey);
@@ -44,22 +44,29 @@ namespace StoreWebApi.Controllers
 
                 // Add product to checkout
                 checkout.Items.Add(new CheckoutItem { ProductId = product.Id, Quantity = request.Quantity });
+
+                // Calculate total cost for this product
                 totalCost += product.Price * request.Quantity;
             }
 
             _context.Checkouts.Add(checkout);
             _context.SaveChanges();
 
+            // Format total cost in ZAR
+            string formattedTotalCost = totalCost.ToString("C", new System.Globalization.CultureInfo("en-ZA"));
+
             return Ok(new
             {
                 checkout.Id,
-                TotalCost = totalCost,
+                TotalCost = formattedTotalCost, // Total cost in ZAR
                 Items = checkout.Items.Select(item => new
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
                     ProductName = _context.Products.Single(p => p.Id == item.ProductId).Name,
-                    UnitPrice = _context.Products.Single(p => p.Id == item.ProductId).Price
+                    UnitPrice = _context.Products.Single(p => p.Id == item.ProductId).Price.ToString("C", new System.Globalization.CultureInfo("en-ZA")), // Price in ZAR
+                    TotalPrice = (_context.Products.Single(p => p.Id == item.ProductId).Price * item.Quantity)
+                                 .ToString("C", new System.Globalization.CultureInfo("en-ZA")) // Total price per product in ZAR
                 })
             });
         }
