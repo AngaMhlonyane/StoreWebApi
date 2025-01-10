@@ -47,6 +47,14 @@ Ensure all necessary NuGet packages are installed:
 ```bash
 dotnet restore
 ```
+or here is a list of packages
+
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Swashbuckle.AspNetCore
+dotnet add package FluentValidation.AspNetCore
+dotnet add package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
 
 ### 4. Apply Migrations
 
